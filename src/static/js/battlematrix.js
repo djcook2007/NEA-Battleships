@@ -5,7 +5,7 @@ const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 function createUnitDragHelper(unit) {
   if (!unit) return false; // Abort drag if no unit
   const move = $('<div class="bg-transparent opacity-25 z-3"></div>');
-  move.append('<img src="/static/img/'+unit.name.toLowerCase()+'.png" alt="'+unit.name+'" ' +
+  move.append('<img src="/static/img/sea/'+unit.name.toLowerCase()+'.png" alt="'+unit.name+'" ' +
     'class="unit-drag-image '+unit.name.toLowerCase()+(unit.rotated ? ' rotated' : '')+'" />');
   //creates a reference to the unit that was grabbed (so it can be disabled when successfully dropped)
   move.data('unit', unit);
@@ -231,7 +231,7 @@ $(document).ready(function () {
         .append(radio)    //Adds the radio button to the wrapper
         //Creates a label holding the name, width and length of the unit (The part that displays on the screen)
         .append('<label for="'+unitName+'">' +
-          '<img src="/static/img/'+unitName.toLowerCase()+'.png" alt="'+unitName+'" class="unit-image '+unitName.toLowerCase()+'" />' +
+          '<img src="/static/img/sea/'+unitName.toLowerCase()+'.png" alt="'+unitName+'" class="unit-image '+unitName.toLowerCase()+'" />' +
           '<span>'+unitName+' ('+unit.width+','+unit.length+')</span>' +
           '</label>');
       $units.append(wrapper);   //Adds the wrapper the unit column
@@ -286,7 +286,7 @@ $(document).ready(function () {
       //Makes row equivalent to the number on the same line as the button dropped on
       let row = Number(currentSquare.data('grid').substring(1));
       // Add the unit image to the drop square (top-left)
-      currentSquare.append('<img src="/static/img/'+unit.name.toLowerCase()+'.png" alt="'+unit.name+'" ' +
+      currentSquare.append('<img src="/static/img/sea/'+unit.name.toLowerCase()+'.png" alt="'+unit.name+'" ' +
         'class="placed-unit-image '+unit.name.toLowerCase()+(unit.rotated ? ' rotated' : '')+'" />');
 
       for (let y = 0; y < width; y++) {   //A for loop for the width of the unit
