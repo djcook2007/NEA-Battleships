@@ -35,6 +35,9 @@ function makeSquareDraggable(square) {
         }
       });
       if (!stillOnBoard) {
+        if (unit.rotated) {
+          unit.rotate();
+        }
         unit.radioButton.prop('disabled', false);
         unit.radioButton.closest('.unit').removeClass('opacity-50');
       }
@@ -67,6 +70,26 @@ function removeUnitFromBoard(board, unit, perButtonCallback) {
   });
 }
 
+// Helper function to highlight all squares that contain the same unit as the one on the selected button
+function selectUnit(board, selectedButton) {
+  //Removes the selected class from all units on the board
+  $('.unit.selected', board).each(function() {
+    $(this).removeClass('selected');
+  });
+  const selectedUnit = selectedButton.data('units-array').pop();
+  //Puts the unit picked up back in the array to allow the other functions to remove it
+  selectedButton.data('units-array').push(selectedUnit);
+
+  //Look at all buttons on the grid to find if they have the selected unit in their data
+  board.find('.unit').each(function () {
+    const $btn = $(this);   //Reference to the button
+    const units = $btn.data('units-array') || [];   //Gets the units that are in that button
+    if (units.includes(selectedUnit)) { //If this button has the selected unit
+      $btn.addClass('selected'); //Highlight it
+    }
+  });
+}
+
 //This subroutine is for opening full screen
 function openFullscreen() {
   const elem = document.documentElement;    //finds the object with the full screen function in it
@@ -82,7 +105,6 @@ function exitFullscreen() {
 }
 
 function handleResponse(response, board, msg) {
-  console.log('Success:', response);  //deals with the response from python
   if (response.result === true) {
     //If the click is a hit, then it adds a class so that css can colour it
     board.find($('*[data-grid="'+response.target+'"]')).addClass('hit');
@@ -94,7 +116,6 @@ function handleResponse(response, board, msg) {
   if (response.result === 'sunk') {
     // For every part of the specific ship that has been sunk, will turn black
     for (let i = 0; i < response.coordinates.length; i++) {
-      console.log('doing:', response.coordinates[i]);
       // Removing the hit class (to remove the red) and replace it with the sunk class (black)
       board.find($('*[data-grid="'+response.coordinates[i]+'"]')).removeClass('hit').addClass('sunk');
     }
@@ -168,6 +189,15 @@ $(document).ready(function () {
       this.width = width;
       this.length = length;
       this.radioButton = radioButton;   //This is to enable and disable the unit after dragging or dropping it
+    }
+
+    rotate() {
+      // Swap width and length
+      const tempLength = this.length;
+      this.length = this.width;
+      this.width = tempLength;
+      // Toggle rotation state
+      this.rotated = !this.rotated;
     }
   }
 
@@ -273,16 +303,12 @@ $(document).ready(function () {
       unit.radioButton.prop('disabled', true); //disable the unit so that it cannot be selected again
       unit.radioButton.prop('checked', false); //unselect the unit
       unit.radioButton.closest('.unit').addClass('opacity-50'); // Visual clue that unit is placed
+      selectUnit(board, currentSquare);
 
       //If all the units are disabled (on the board)
       if ($('#units input[name="unit"]').length === $('#units input[name="unit"]:disabled').length) {  
         $('#play').prop('disabled', false); //Then renable
       }
-
-      //Removes the selected class from all units on the board
-      $('.unit.selected', board).each(function() {
-        $(this).removeClass('selected');
-      });
     }
   });
 
@@ -318,22 +344,8 @@ $(document).ready(function () {
   //When you click on the board, select a unit if there is one there
   $('.game-board.setup').on('click', 'button', function() { //Looks for any button inside game-board
     const board = $('.game-board.setup');
-    //Removes the selected class from all units on the board
-    $('.unit.selected', board).each(function() {
-      $(this).removeClass('selected');
-    });
-    const selectedUnit = $(this).data('units-array').pop();
-    //Puts the unit picked up back in the array to allow the other functions to remove it
-    $(this).data('units-array').push(selectedUnit);
-
-    //Look at all buttons on the grid to find if they have the dragged unit in their data
-    board.find('.unit').each(function () {
-      const $btn = $(this);   //Reference to the button
-      const units = $btn.data('units-array') || [];   //Gets the units that are in that button
-      if (units.includes(selectedUnit)) { //If this button has the dragged unit
-        $btn.addClass('selected'); //Highlight it
-      }
-    });
+    const selectedButton = $(this);
+    selectUnit(board, selectedButton);
   });
 
   //When you click the rotate button, it rotates the currently selected unit (if there is one)
@@ -348,13 +360,7 @@ $(document).ready(function () {
     // Rotate the unit image on the button
     $(btn).find('.placed-unit-image.'+selectedUnit.name.toLowerCase()).toggleClass('rotated');
 
-    // Swap length and width
-    const tempLength = selectedUnit.length;
-    selectedUnit.length = selectedUnit.width;
-    selectedUnit.width = tempLength;
-
-    // Toggle rotation state
-    selectedUnit.rotated = !selectedUnit.rotated;
+    selectedUnit.rotate();
 
     removeUnitFromBoard(board, selectedUnit, function ($btn, newUnits) {
       $btn.removeClass('selected');
