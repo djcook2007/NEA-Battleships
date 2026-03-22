@@ -2,7 +2,7 @@
 import random
 from gameplay import grid
 
-def robotShooting(userGrid):
+def robotShooting(userGrid, foundGame):
     #Randomly chooses an x and y coordinate to shoot
     yAxis = random.randint(0,grid.gridSize-1)
     xAxis = random.randint(0,grid.gridSize-1)
@@ -12,7 +12,7 @@ def robotShooting(userGrid):
     type = grid.gridReferenceToCoords(userGrid, grid.coordsToGridReference(xAxis, yAxis), None)
     #Checks to see that the last characters of the spot chosen has not been hit or missed already
     #Essentially makes sure that the robot can't shoot in the same place twice
-    while str(type)[-4:] == "_hit" or str(type)[-5:] == "_miss":
+    while str(type)[-4:] == "_hit" or str(type)[-5:] == "_miss" or str(type)[-5:] == "_sunk":
         #Resets the x and y coordinates until the location is acceptable
         yAxis = random.randint(0,grid.gridSize-1)
         xAxis = random.randint(0,grid.gridSize-1)

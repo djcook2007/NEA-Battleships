@@ -110,6 +110,7 @@ def creatingRoutes(app, request, render_template):
             #(with it's own uuid), it also passes the difficulty of the robot and the map to use
             return render_template('battlematrix.html', gridSize = grid.gridSize, gameId = gameId)
     
+    
     #Everytime a button has been clicked by the user, this subroutine will run
     @app.route('/take-turn', methods=['POST'])
     def takeTurn():
