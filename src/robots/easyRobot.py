@@ -2,7 +2,10 @@
 import random
 from gameplay import grid
 
-def robotShooting(userGrid, foundGame):
+def robotChecking(userGrid, foundGame):
+    return robotShooting(userGrid)
+
+def robotShooting(userGrid):
     #Randomly chooses an x and y coordinate to shoot
     yAxis = random.randint(0,grid.gridSize-1)
     xAxis = random.randint(0,grid.gridSize-1)

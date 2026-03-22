@@ -84,22 +84,48 @@
                 </div>            
             </div>
             <!-- Last column has controls -->
-            <div class="col-12 col-sm-3 d-flex flex-column align-items-center gap-5">
+            <div class="col-12 col-sm-3 d-flex flex-column align-items-center gap-5 ">
                 <!--Passes the information on which map and what difficulty of robot you will be playing against-->
                 <form id="play-form" action="/gameplay" method="post">
                     <input type="hidden" name="game-id" value="{{ gameId }}"/>
                     <input type="hidden" name="random" value="notRandom"/>
+                    {% if difficulty %}
+                    <div class="form-row mb-2">
+                        <label for="handicap">Handicap</label>
+                        <input type="number" min="0" max="50" name="handicap" id="handicap"/>
+                    </div>
+                    {% endif %}
                     <!-- Disabled until all ships are placed -->
-                    <button id="play" type="submit" disabled="disabled" class="btn">PLAY</button>
+                    <div class="form-row text-center">
+                        <button id="play" type="submit" disabled="disabled" class="btn">PLAY</button>
+                    </div>
                 </form>
 
                 <!--This will do the exact same thing as the play button, but will make the user grid random-->
                 <form id="randomize-form" action="/gameplay" method="post">
                     <input type="hidden" name="game-id" value="{{ gameId }}"/>
                     <input type="hidden" name="random" value="random"/>
+                    <input type="hidden" name="handicap" id="random-handicap"/>
                     <button id="randomizer" type="submit" class="btn">Random</button>
                 </form>
                 <button id="rotate" class="btn">Rotate</button>
+                {% if difficulty %}
+                    <p>
+                        <br>
+                        <br>
+                        Recommended handicap = 30<br>
+                        Any number between 0 to 50 is accepted<br>
+                        If the number is invalid<br>
+                        YOU GET 0<br>
+                        If you left the handicap box empty or incorrect,<br>
+                        and you press the random button<br>
+                        Your ships and handicap is randomized
+                    </p>
+                    <h3 style="text-align: center;">
+                        Good Luck!
+                    </h3>
+                {% endif %}
+
             </div>
         </div>
     </div>
@@ -114,6 +140,12 @@
     </script>   
     <!-- Common scripts -->
     {% include 'partials/scripts.html' %}
+    <script>
+        //copy the handicap value
+        $('#handicap').on("change", function() {
+            $('#random-handicap').val($('#handicap').val());
+        });
+    </script>   
 
 </body>
 </html>

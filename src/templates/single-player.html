@@ -21,7 +21,7 @@
 
 <!--Opens the body-->
 <body>
-    <div class="container-fluid min-vh-100 d-grid" style="grid-template-rows: auto 1fr 1fr;">
+    <div class="container-fluid min-vh-100 d-grid">
         <div class="row justify-content-center align-items-center pt-4">
             <div class="col-2 col-sm-3">
                 <!--Creating a link back to the home page-->
@@ -68,6 +68,23 @@
 
                     <!--Submit button to take you to the next page (the setup html)-->
                     <button type="submit" class="btn fs-1 px-5 py-3">Medium</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center align-items-center">
+            <div class="col-auto">
+                <!--form for submiting future data to the setup-->
+                <form action="/setup" method="post" class="mb-0">
+                    <!--Tells my program which page I came from-->
+                    <input type="hidden" name="previous-page" value="single-player"/>
+                    <input type="hidden" name="robot" value="hard"/>
+                    <input type="hidden" name="gameId" value="{{gameId}}"/>
+                    <input type="hidden" name="units" value="{{units}}"/>
+                    <input type="hidden" name="gridSize" value="{{gridSize}}"/>
+
+                    <!--Submit button to take you to the next page (the setup html)-->
+                    <button type="submit" class="btn fs-1 px-5 py-3">Hard</button>
                 </form>
             </div>
         </div>

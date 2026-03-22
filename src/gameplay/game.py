@@ -35,6 +35,9 @@ class Game:
                               ["destroyer", None],
                               ["submarine", None]]
         self.robotAttacking = None
+
+        #Only for hard robot
+        self.handicap = 30
         
         #Setting the difficulty to nothing so that it can be changed
         self.difficulty = None
